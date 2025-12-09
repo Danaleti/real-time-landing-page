@@ -1,68 +1,78 @@
-/* danaleti/real-time-landing-page/real-time-landing-page-4384333c4d5da351d4f064e6e593e6bdd4349b07/src/index.css */
+```css
+/* src/index.css - simplified and cleaned up for the Retreaver landing page */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Core visual variables for the dark theme and teal accent */
 @layer base {
   :root {
-    /* Global Lovable Dark Theme Variables */
-    /* Background: Near Black */
-    --background: 222 47% 5%;
-    --foreground: 210 40% 98%;
-    /* Card: Dark Charcoal, slightly lighter than BG */
-    --card: 217 33% 10%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 6%;
-    --popover-foreground: 210 40% 98%;
-    /* Primary: Bright Cyan/Teal (#00e5ff) */
-    --primary: 186 100% 50%;
-    --primary-foreground: 222 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 33% 15%);
-    /* Input background: slightly different/darker than card for depth */
-    --input: 222 30% 9%;
-    --ring: 186 100% 50%;
-    /* Default Radius: Set higher for smoother global aesthetic (~12px) */
-    --radius: 0.75rem; 
+    --bg-900: 6 8% 5%;         /* near black */
+    --card-900: 220 12% 8%;    /* dark card */
+    --fg-100: 210 16% 98%;
+    --muted-foreground: 210 10% 70%;
+    --primary-teal: 177 95% 57%; /* teal-ish */
+    --radius: 0.75rem;
   }
- 
-  .dark {
-    --background: 222 47% 5%;
-    --foreground: 210 40% 98%;
-    --card: 217 33% 10%;
-    --card-foreground: 210 40% 98%;
-    --primary: 186 100% 50%;
-    --primary-foreground: 222 47.4% 11.2%;
-  }
-}
- 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
+
+  /* apply font + base backgrounds using Tailwind tokens */
+  html, body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  }
+
+  /* Map Tailwind color tokens to the CSS variables for usage in classes */
+  .bg-background {
+    background-color: hsl(var(--bg-900));
+    background-image: linear-gradient(180deg, rgba(6,9,14,0.6) 0%, rgba(0,0,0,0.9) 100%);
+  }
+
+  .bg-card {
+    background-color: hsl(var(--card-900));
+  }
+
+  .text-foreground {
+    color: hsl(var(--fg-100));
+  }
+
+  .text-muted-foreground {
+    color: hsl(var(--muted-foreground));
   }
 }
 
+/* Utilities for teal glow / hero ambience / headline glow */
 @layer utilities {
   .text-glow {
-    /* Enhanced glow effect for the headline accent text */
-    text-shadow: 0 0 30px rgba(0, 229, 255, 0.8);
+    /* bright teal gradient text glow */
+    text-shadow: 0 2px 18px rgba(25,240,255,0.16), 0 0 36px rgba(15,191,204,0.12);
   }
-  /* Subtle radial gradient for ambiance matching the target */
+
   .bg-hero-gradient {
-    background: radial-gradient(circle at 50% -10%, #00e5ff1a 0%, #06090e 50%);
-    opacity: 0.8;
+    background: radial-gradient(circle at 50% -10%, rgba(25,240,255,0.12) 0%, rgba(6,9,14,0.75) 45%);
+  }
+
+  /* Reusable teal radial for behind cards (size and softness adjustable) */
+  .teal-radial {
+    height: 450px;
+    width: 900px;
+    max-width: 95%;
+    border-radius: 18px;
+    background: radial-gradient(closest-corner at 50% 30%, rgba(25,240,255,0.18) 0%, rgba(15,191,204,0.08) 25%, transparent 55%);
+    filter: saturate(120%);
+  }
+
+  /* Small blur helper */
+  .blur-3xl {
+    filter: blur(48px);
+  }
+}
+
+/* Focus states: make keyboard focus visible and accessible */
+@layer components {
+  .focus-visible\:ring-teal {
+    box-shadow: 0 0 0 4px rgba(15,191,204,0.18);
+    outline: none;
   }
 }
