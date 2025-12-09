@@ -1,24 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 /**
  * LeadCaptureForm
- * - Keeps core lead fields
- * - Accepts onSuccess prop: called after a (simulated) successful submission
+ * - Props:
+ *    onSuccess?: () => void             // called on simulated successful submit
+ *    resetKey?: number                  // when this changes, form fields reset
  *
- * Props:
- *  - onSuccess?: () => void
- *
- * NOTE: This is a presentational/local form with simulated submit.
- * Replace the submit handler integration when you connect to a real API.
+ * The form is local-only (simulated submit) and will call onSuccess after submit.
  */
 
 type Props = {
   onSuccess?: () => void;
+  resetKey?: number;
 };
 
-export const LeadCaptureForm: React.FC<Props> = ({ onSuccess }) => {
+export const LeadCaptureForm: React.FC<Props> = ({ onSuccess, resetKey }) => {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
@@ -26,11 +24,21 @@ export const LeadCaptureForm: React.FC<Props> = ({ onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Reset fields when resetKey changes (triggered by parent)
+  useEffect(() => {
+    setName("");
+    setCompany("");
+    setEmail("");
+    setPhone("");
+    setError(null);
+    setLoading(false);
+  }, [resetKey]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Basic validation
+    // Minimal validation
     if (!name || !phone) {
       setError("Please provide at least your name and phone number.");
       return;
@@ -42,7 +50,6 @@ export const LeadCaptureForm: React.FC<Props> = ({ onSuccess }) => {
       // Simulate a network request / success response
       await new Promise((res) => setTimeout(res, 900));
 
-      // Call onSuccess to inform parent (Index.tsx) to show Success Card
       if (onSuccess) onSuccess();
     } catch (err) {
       setError("Submission failed — please try again.");
