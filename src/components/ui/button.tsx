@@ -1,3 +1,4 @@
+// danaleti/real-time-landing-page/real-time-landing-page-4384333c4d5da351d4f064e6e593e6bdd4349b07/src/components/ui/button.tsx
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -15,7 +16,9 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-secondary hover:text-secondary-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        // Gradient should be full opacity for black text contrast
         gradient: "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]",
+        // Added animate-pulse-glow for the prominent CTA button
         call: "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] animate-pulse-glow font-semibold",
       },
       size: {
