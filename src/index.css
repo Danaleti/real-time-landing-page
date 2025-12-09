@@ -1,29 +1,26 @@
 ```css
-/* src/index.css - simplified and cleaned up for the Retreaver landing page */
+/* src/index.css - simplified + neon logo + animations */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Core visual variables for the dark theme and teal accent */
 @layer base {
   :root {
-    --bg-900: 6 8% 5%;         /* near black */
-    --card-900: 220 12% 8%;    /* dark card */
+    --bg-900: 6 8% 5%;
+    --card-900: 220 12% 8%;
     --fg-100: 210 16% 98%;
     --muted-foreground: 210 10% 70%;
-    --primary-teal: 177 95% 57%; /* teal-ish */
+    --primary-teal: 177 95% 57%;
     --radius: 0.75rem;
   }
 
-  /* apply font + base backgrounds using Tailwind tokens */
   html, body {
     @apply bg-background text-foreground;
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   }
 
-  /* Map Tailwind color tokens to the CSS variables for usage in classes */
   .bg-background {
     background-color: hsl(var(--bg-900));
     background-image: linear-gradient(180deg, rgba(6,9,14,0.6) 0%, rgba(0,0,0,0.9) 100%);
@@ -42,10 +39,8 @@
   }
 }
 
-/* Utilities for teal glow / hero ambience / headline glow */
 @layer utilities {
   .text-glow {
-    /* bright teal gradient text glow */
     text-shadow: 0 2px 18px rgba(25,240,255,0.16), 0 0 36px rgba(15,191,204,0.12);
   }
 
@@ -53,7 +48,6 @@
     background: radial-gradient(circle at 50% -10%, rgba(25,240,255,0.12) 0%, rgba(6,9,14,0.75) 45%);
   }
 
-  /* Reusable teal radial for behind cards (size and softness adjustable) */
   .teal-radial {
     height: 450px;
     width: 900px;
@@ -63,13 +57,40 @@
     filter: saturate(120%);
   }
 
-  /* Small blur helper */
   .blur-3xl {
     filter: blur(48px);
   }
+
+  /* Neon logo treatment (gradient + glow) */
+  .neon-logo {
+    background-image: linear-gradient(90deg, #19F0FF 0%, #0FBFCC 50%, #24FFE1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow:
+      0 2px 6px rgba(15,191,204,0.12),
+      0 6px 20px rgba(25,240,255,0.08),
+      0 0 30px rgba(15,191,204,0.12);
+    letter-spacing: -0.6px;
+  }
+
+  /* Slide + fade in for success card */
+  @keyframes slideFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .slide-fade-in {
+    animation: slideFadeIn 420ms cubic-bezier(.2,.9,.3,1) both;
+  }
 }
 
-/* Focus states: make keyboard focus visible and accessible */
+/* Focus visible ring helper */
 @layer components {
   .focus-visible\:ring-teal {
     box-shadow: 0 0 0 4px rgba(15,191,204,0.18);
