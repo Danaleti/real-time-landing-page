@@ -1,3 +1,4 @@
+// danaleti/real-time-landing-page/real-time-landing-page-4384333c4d5da351d4f064e6e593e6bdd4349b07/src/index.css
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -7,7 +8,7 @@
 @layer base {
   :root {
     /* These variables map to the hex codes in tailwind.config.ts */
-    --background: 222 47% 6%;
+    --background: 222 47% 5%;
     --foreground: 210 40% 98%;
     --card: 217 33% 10%;
     --card-foreground: 210 40% 98%;
@@ -24,13 +25,13 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --input: 222 30% 9%;
     --ring: 186 100% 50%;
-    --radius: 0.75rem;
+    --radius: 1.5rem; /* Increased base radius */
   }
  
   .dark {
-    --background: 222 47% 6%;
+    --background: 222 47% 5%;
     --foreground: 210 40% 98%;
     --card: 217 33% 10%;
     --card-foreground: 210 40% 98%;
@@ -52,9 +53,15 @@
 
 @layer utilities {
   .text-glow {
-    text-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+    /* Adjusted glow to be brighter to match the target */
+    text-shadow: 0 0 30px rgba(0, 229, 255, 0.8);
   }
   .bg-hero-glow {
     background: radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.12) 0%, rgba(8, 12, 21, 0) 60%);
+  }
+  /* Custom Hero Gradient for the full background ambience */
+  .bg-hero-gradient {
+    background: radial-gradient(circle at 50% -10%, #00e5ff1a 0%, #06090e 50%);
+    opacity: 0.8;
   }
 }
