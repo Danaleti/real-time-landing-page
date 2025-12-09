@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "@/components/Header";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import {
@@ -10,13 +10,10 @@ import {
 } from "lucide-react";
 
 /**
- * Landing page layout:
- * - Transparent header (kept from existing Header component)
- * - Centered hero (headline + subheadline)
- * - Lead capture form (existing LeadCaptureForm component)
- * - Demo Success Card (matches screenshot)
- * - Feature icons row
- * - Minimal footer
+ * Updated Index page:
+ * - Lifts submission state (submitted)
+ * - Passes onSuccess to LeadCaptureForm
+ * - Shows Success Card only after form submission
  */
 
 const FeatureItem: React.FC<{
@@ -37,9 +34,10 @@ const FeatureItem: React.FC<{
 };
 
 const Index = () => {
+  const [submitted, setSubmitted] = useState(false);
+
   return (
     <div className="min-h-screen w-full bg-background text-foreground relative overflow-hidden">
-      {/* Teal radial glow behind center */}
       <div
         className="pointer-events-none absolute inset-0 z-0 flex items-start justify-center"
         aria-hidden
@@ -47,14 +45,12 @@ const Index = () => {
         <div className="mt-24 w-[1200px] max-w-full teal-radial opacity-80" />
       </div>
 
-      {/* Header (transparent) */}
       <header className="relative z-20">
         <div className="max-w-6xl mx-auto px-6">
           <Header />
         </div>
       </header>
 
-      {/* Main */}
       <main className="relative z-10 flex-1 flex flex-col items-center">
         <div className="w-full max-w-6xl px-6 py-16">
           {/* Hero */}
@@ -74,54 +70,58 @@ const Index = () => {
             </p>
           </section>
 
-          {/* Centered form card area */}
+          {/* Form Card */}
           <section className="mx-auto max-w-3xl">
-            {/* Card wrapper with subtle teal glow */}
             <div className="relative">
               <div className="absolute -inset-6 blur-3xl rounded-xl teal-radial/30 pointer-events-none" />
-              <div className="relative bg-card/95 border border-white/6 rounded-xl shadow-2xl p-6 md:p-8">
-                {/* Keep existing form component (retains fields and logic) */}
-                <LeadCaptureForm />
+              <div
+                className={`relative bg-card/95 border border-white/6 rounded-xl shadow-2xl p-6 md:p-8 transition-opacity ${
+                  submitted ? "opacity-40 pointer-events-none" : "opacity-100"
+                }`}
+              >
+                <LeadCaptureForm onSuccess={() => setSubmitted(true)} />
               </div>
             </div>
           </section>
 
-          {/* Success Card (demo/presentational) */}
-          <section className="mx-auto max-w-lg mt-12">
-            <div className="relative">
-              <div className="absolute -inset-8 blur-2xl rounded-2xl teal-radial/40 pointer-events-none" />
-              <div className="relative bg-[#111217] border border-white/6 rounded-2xl shadow-xl p-6 md:p-8 flex flex-col items-stretch gap-4">
-                <div className="flex items-center justify-center">
-                  <div className="p-3 rounded-full bg-gradient-to-br from-teal-400/10 to-cyan-400/10 text-teal-300">
-                    <Check className="w-6 h-6" />
+          {/* Success Card (hidden until submit) */}
+          {submitted && (
+            <section className="mx-auto max-w-lg mt-12">
+              <div className="relative">
+                <div className="absolute -inset-8 blur-2xl rounded-2xl teal-radial/40 pointer-events-none" />
+                <div className="relative bg-[#111217] border border-white/6 rounded-2xl shadow-xl p-6 md:p-8 flex flex-col items-stretch gap-4">
+                  <div className="flex items-center justify-center">
+                    <div className="p-3 rounded-full bg-gradient-to-br from-teal-400/10 to-cyan-400/10 text-teal-300">
+                      <Check className="w-6 h-6" />
+                    </div>
+                  </div>
+
+                  <div className="text-center">
+                    <h3 className="text-white text-lg font-semibold">
+                      Thanks! You're ready to connect with our team.
+                    </h3>
+                    <p className="mt-1 text-sm text-muted-foreground/80">
+                      Click below to speak with a Retreaver specialist now.
+                    </p>
+                  </div>
+
+                  <div className="mt-2">
+                    <a
+                      href="tel:+18005551234"
+                      className="group inline-flex items-center justify-between w-full rounded-lg bg-gradient-to-r from-teal-400 to-cyan-300 text-black font-semibold px-4 py-3 shadow-lg hover:from-teal-300 hover:to-cyan-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-300/40 transition"
+                      aria-label="Call Retreaver Now"
+                    >
+                      <div className="flex items-center gap-3">
+                        <PhoneCall className="w-5 h-5 text-black/70" />
+                        <span>Call Retreaver Now</span>
+                      </div>
+                      <span className="text-sm font-mono">+1 (800) 555-1234</span>
+                    </a>
                   </div>
                 </div>
-
-                <div className="text-center">
-                  <h3 className="text-white text-lg font-semibold">
-                    Thanks! You're ready to connect with our team.
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground/80">
-                    Click below to speak with a Retreaver specialist now.
-                  </p>
-                </div>
-
-                <div className="mt-2">
-                  <a
-                    href="tel:+18005551234"
-                    className="group inline-flex items-center justify-between w-full rounded-lg bg-gradient-to-r from-teal-400 to-cyan-300 text-black font-semibold px-4 py-3 shadow-lg hover:from-teal-300 hover:to-cyan-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-300/40 transition"
-                    aria-label="Call Retreaver Now"
-                  >
-                    <div className="flex items-center gap-3">
-                      <PhoneCall className="w-5 h-5 text-black/70" />
-                      <span>Call Retreaver Now</span>
-                    </div>
-                    <span className="text-sm font-mono">+1 (800) 555-1234</span>
-                  </a>
-                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           {/* Feature Icons Row */}
           <section className="mx-auto max-w-2xl mt-12">
@@ -134,7 +134,6 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="w-full py-6 relative z-10">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <p className="text-xs text-muted-foreground/20 hover:text-muted-foreground/80 transition-opacity opacity-0 hover:opacity-100">
