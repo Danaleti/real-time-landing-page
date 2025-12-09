@@ -19,18 +19,15 @@ export default {
     },
     extend: {
       colors: {
-        // Precise Lovable Dark Theme Colors
+        // Synchronized with :root in index.css
         border: "hsl(217 33% 15%)",
-        // Adjusted: Input background should be slightly different from Card background for contrast
-        input: "hsl(222 30% 9%)", 
+        input: "hsl(222 30% 9%)",
         ring: "hsl(186 100% 50%)",
-        // Adjusted: Main background darker, closer to black/deep navy
-        background: "hsl(222 47% 5%)", // ~#06090e
-        foreground: "hsl(210 40% 98%)", // White text
+        background: "hsl(222 47% 5%)", 
+        foreground: "hsl(210 40% 98%)",
         primary: {
-          // Bright Cyan/Teal
-          DEFAULT: "hsl(186 100% 50%)", // #00e5ff
-          foreground: "hsl(222 47.4% 11.2%)", // Dark text for the bright primary button
+          DEFAULT: "hsl(186 100% 50%)", 
+          foreground: "hsl(222 47.4% 11.2%)",
         },
         secondary: {
           DEFAULT: "hsl(217.2 32.6% 17.5%)",
@@ -49,17 +46,17 @@ export default {
           foreground: "hsl(210 40% 98%)",
         },
         card: {
-          // Card Dark, slightly lighter than background
-          DEFAULT: "hsl(217 33% 10%)", // ~#111620
+          DEFAULT: "hsl(217 33% 10%)", 
           foreground: "hsl(210 40% 98%)",
         },
       },
       borderRadius: {
+        // Set higher for smoother global aesthetic. Overriding standard Shadcn config for Lovable look.
         lg: "0.75rem",
         md: "calc(0.75rem - 2px)",
         sm: "calc(0.75rem - 4px)",
-        // Setting 2xl to 1.5rem (24px) to match the visual target's heavy rounding
-        "2xl": "1.5rem",
+        // Explicitly define a larger radius for the form card (~24px)
+        "2xl": "1.5rem", 
       },
       keyframes: {
         "accordion-down": {
@@ -70,7 +67,7 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        // Custom keyframe for the CTA glow pulse effect
+        // Custom keyframe for the glowing CTA button
         "pulse-glow": {
           "0%, 100%": { "box-shadow": "0 0 10px rgba(0, 229, 255, 0.5)", transform: "scale(1)" },
           "50%": { "box-shadow": "0 0 25px rgba(0, 229, 255, 0.8), 0 0 10px rgba(0, 229, 255, 0.6)", transform: "scale(1.01)" },
@@ -79,7 +76,6 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        // Custom animation application
         "pulse-glow": "pulse-glow 3s ease-in-out infinite",
       },
     },
