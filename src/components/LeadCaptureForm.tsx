@@ -1,3 +1,4 @@
+// src/components/LeadCaptureForm.tsx
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,11 @@ interface FormData {
   email: string;
   zip: string;
   company_name: string;
+  // Hidden fields / Auto-captured parameters
+  gclid: string;
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
 }
 
 interface FormErrors {
@@ -29,15 +35,23 @@ export const LeadCaptureForm = () => {
     email: "",
     zip: "",
     company_name: "",
+    gclid: "",
+    utm_source: "",
+    utm_medium: "",
+    utm_campaign: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [utm, setUtm] = useState("");
-  const [gclid, setGclid] = useState("");
 
+  // Read URL parameters (UTM, GCLID) on mount
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    setUtm(urlParams.get("utm") || "");
-    setGclid(urlParams.get("gclid") || "");
+    setFormData((prev) => ({
+      ...prev,
+      gclid: urlParams.get("gclid") || "",
+      utm_source: urlParams.get("utm_source") || "",
+      utm_medium: urlParams.get("utm_medium") || "",
+      utm_campaign: urlParams.get("utm_campaign") || "",
+    }));
   }, []);
 
   const validateForm = (): boolean => {
@@ -45,11 +59,13 @@ export const LeadCaptureForm = () => {
 
     if (!formData.first_name.trim()) { newErrors.first_name = "First name is required"; }
     if (!formData.last_name.trim()) { newErrors.last_name = "Last name is required"; }
+    
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email";
     }
+    
     if (!formData.zip.trim()) {
       newErrors.zip = "ZIP code is required";
     } else if (!/^\d{5}(-\d{4})?$/.test(formData.zip)) {
@@ -63,22 +79,29 @@ export const LeadCaptureForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
+      // 1. Update URL with all form data and captured parameters
       const params = new URLSearchParams();
-      params.set("utm", utm);
-      params.set("gclid", gclid);
       params.set("first_name", formData.first_name);
       params.set("last_name", formData.last_name);
       params.set("email", formData.email);
       params.set("zip", formData.zip);
-      params.set("company_name", formData.company_name);
+      if (formData.company_name) params.set("company_name", formData.company_name);
+      
+      // Append hidden tracking params if they exist
+      if (formData.gclid) params.set("gclid", formData.gclid);
+      if (formData.utm_source) params.set("utm_source", formData.utm_source);
+      if (formData.utm_medium) params.set("utm_medium", formData.utm_medium);
+      if (formData.utm_campaign) params.set("utm_campaign", formData.utm_campaign);
 
       const newUrl = window.location.pathname + "?" + params.toString();
       window.history.replaceState({}, '', newUrl);
 
       setIsSubmitted(true);
       
+      // 2. Manually trigger change event on caller_number input to force Retreaver script update
       const callerNumberInput = document.getElementById('caller_number');
       if (callerNumberInput) {
+        // Dispatch synthetic change event to notify Retreaver script in index.html
         callerNumberInput.dispatchEvent(new Event('change', { bubbles: true }));
       }
     }
@@ -86,6 +109,7 @@ export const LeadCaptureForm = () => {
 
   const handleChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error for the field being changed
     if (errors[field as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
@@ -96,7 +120,6 @@ export const LeadCaptureForm = () => {
     return (
       <div className="w-full max-w-md mx-auto animate-scale-in">
         <Card className="rounded-2xl p-10 text-center shadow-2xl">
-          {/* Checkmark Circle Styling */}
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-card border-4 border-primary/20 flex items-center justify-center shadow-inner">
             <div className="w-12 h-12 rounded-full bg-background/50 border border-primary/50 flex items-center justify-center">
               <Check className="w-6 h-6 text-primary" />
@@ -109,7 +132,6 @@ export const LeadCaptureForm = () => {
             Click below to speak with a Retreaver specialist now.
           </p>
           <a href="tel:18668987878" className="block">
-            {/* Call button using custom 'call' variant and 'xl' size */}
             <Button variant="call" size="xl" className="w-full h-14">
               <Phone className="w-6 h-6" />
               Call Retreaver Now
@@ -129,8 +151,12 @@ export const LeadCaptureForm = () => {
           Get Started Today
         </h3>
         <form id="retreaver-form" onSubmit={handleSubmit} className="space-y-6">
-          <input type="hidden" name="utm" value={utm} />
-          <input type="hidden" name="gclid" value={gclid} />
+          {/* Hidden fields for Retreaver/Tracking data */}
+          <input id="caller_number" type="hidden" name="caller_number" />
+          <input type="hidden" name="gclid" value={formData.gclid} />
+          <input type="hidden" name="utm_source" value={formData.utm_source} />
+          <input type="hidden" name="utm_medium" value={formData.utm_medium} />
+          <input type="hidden" name="utm_campaign" value={formData.utm_campaign} />
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -223,8 +249,6 @@ export const LeadCaptureForm = () => {
               className="h-12 text-base px-4 bg-input border-border focus-visible:ring-primary"
             />
           </div>
-
-          <input id="caller_number" type="hidden" />
 
           {/* Submit button using 'gradient' variant and 'lg' size */}
           <Button 
