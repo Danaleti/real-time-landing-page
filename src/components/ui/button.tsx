@@ -1,4 +1,3 @@
-// danaleti/real-time-landing-page/real-time-landing-page-4384333c4d5da351d4f064e6e593e6bdd4349b07/src/components/ui/button.tsx
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -16,16 +15,16 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-secondary hover:text-secondary-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Gradient should be full opacity for black text contrast
+        // Gradient variant for the form submission button
         gradient: "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]",
-        // Added animate-pulse-glow for the prominent CTA button
+        // Call variant for the successful connection button, applying pulse-glow
         call: "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] animate-pulse-glow font-semibold",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
-        lg: "h-12 rounded-lg px-8 text-base",
-        xl: "h-14 rounded-xl px-10 text-lg",
+        lg: "h-12 rounded-xl px-8 text-base", // Softer rounding for large buttons
+        xl: "h-14 rounded-2xl px-10 text-lg", // Maximum rounding for primary CTA
         icon: "h-10 w-10",
       },
     },
