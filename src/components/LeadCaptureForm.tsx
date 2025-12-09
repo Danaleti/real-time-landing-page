@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
  * - Props:
  *    onSuccess?: () => void             // called on simulated successful submit
  *    resetKey?: number                  // when this changes, form fields reset
+ *    autoFocusOnReset?: boolean         // when true, focus first input after resetKey changes
  *
  * The form is local-only (simulated submit) and will call onSuccess after submit.
  */
@@ -14,15 +15,23 @@ import { Input } from "@/components/ui/input";
 type Props = {
   onSuccess?: () => void;
   resetKey?: number;
+  autoFocusOnReset?: boolean;
 };
 
-export const LeadCaptureForm: React.FC<Props> = ({ onSuccess, resetKey }) => {
+export const LeadCaptureForm: React.FC<Props> = ({
+  onSuccess,
+  resetKey,
+  autoFocusOnReset = true,
+}) => {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Ref to the first input (Full name) for focus return on reset.
+  const firstInputRef = useRef<HTMLInputElement | null>(null);
 
   // Reset fields when resetKey changes (triggered by parent)
   useEffect(() => {
@@ -32,7 +41,18 @@ export const LeadCaptureForm: React.FC<Props> = ({ onSuccess, resetKey }) => {
     setPhone("");
     setError(null);
     setLoading(false);
-  }, [resetKey]);
+
+    // After reset, optionally move focus to the first input.
+    if (autoFocusOnReset) {
+      // A tiny timeout to ensure DOM updates are flushed; avoids focus race
+      // and is an accessible-friendly pattern. 0ms is enough.
+      // This prevents attempts to focus while the element might still be
+      // undergoing transitions in the parent.
+      window.setTimeout(() => {
+        firstInputRef.current?.focus();
+      }, 0);
+    }
+  }, [resetKey, autoFocusOnReset]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,11 +79,13 @@ export const LeadCaptureForm: React.FC<Props> = ({ onSuccess, resetKey }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-3">
+    <form onSubmit={handleSubmit} className="grid gap-3" aria-label="Lead capture form">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <label className="flex flex-col">
           <span className="text-xs text-muted-foreground/80 mb-1">Full name</span>
           <Input
+            // attach ref to first input for focus management
+            ref={firstInputRef as any}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Jane Doe"
@@ -109,7 +131,7 @@ export const LeadCaptureForm: React.FC<Props> = ({ onSuccess, resetKey }) => {
         </label>
       </div>
 
-      {error && <div className="text-sm text-destructive mt-1">{error}</div>}
+      {error && <div className="text-sm text-destructive mt-1" role="status">{error}</div>}
 
       <div className="pt-2">
         <Button type="submit" className="w-full" disabled={loading} aria-label="Submit lead form">
