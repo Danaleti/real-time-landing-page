@@ -10,10 +10,10 @@ import {
 } from "lucide-react";
 
 /**
- * Updated Index page:
- * - Lifts submission state (submitted)
- * - Passes onSuccess to LeadCaptureForm
- * - Shows Success Card only after form submission
+ * Updated Index:
+ * - submitted state controls success card visibility
+ * - resetKey increments to trigger form reset (passed to LeadCaptureForm)
+ * - subtle animations on form de-emphasis & success card
  */
 
 const FeatureItem: React.FC<{
@@ -35,6 +35,13 @@ const FeatureItem: React.FC<{
 
 const Index = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
+
+  const handleReset = () => {
+    // Hide success card and increment resetKey to clear the form
+    setSubmitted(false);
+    setResetKey((k) => k + 1);
+  };
 
   return (
     <div className="min-h-screen w-full bg-background text-foreground relative overflow-hidden">
@@ -75,11 +82,13 @@ const Index = () => {
             <div className="relative">
               <div className="absolute -inset-6 blur-3xl rounded-xl teal-radial/30 pointer-events-none" />
               <div
-                className={`relative bg-card/95 border border-white/6 rounded-xl shadow-2xl p-6 md:p-8 transition-opacity ${
-                  submitted ? "opacity-40 pointer-events-none" : "opacity-100"
+                className={`relative bg-card/95 border border-white/6 rounded-xl shadow-2xl p-6 md:p-8 transition-all duration-500 ${
+                  submitted
+                    ? "opacity-40 pointer-events-none scale-98"
+                    : "opacity-100 scale-100"
                 }`}
               >
-                <LeadCaptureForm onSuccess={() => setSubmitted(true)} />
+                <LeadCaptureForm onSuccess={() => setSubmitted(true)} resetKey={resetKey} />
               </div>
             </div>
           </section>
@@ -89,7 +98,7 @@ const Index = () => {
             <section className="mx-auto max-w-lg mt-12">
               <div className="relative">
                 <div className="absolute -inset-8 blur-2xl rounded-2xl teal-radial/40 pointer-events-none" />
-                <div className="relative bg-[#111217] border border-white/6 rounded-2xl shadow-xl p-6 md:p-8 flex flex-col items-stretch gap-4">
+                <div className="relative bg-[#111217] border border-white/6 rounded-2xl shadow-xl p-6 md:p-8 flex flex-col items-stretch gap-4 slide-fade-in">
                   <div className="flex items-center justify-center">
                     <div className="p-3 rounded-full bg-gradient-to-br from-teal-400/10 to-cyan-400/10 text-teal-300">
                       <Check className="w-6 h-6" />
@@ -105,7 +114,7 @@ const Index = () => {
                     </p>
                   </div>
 
-                  <div className="mt-2">
+                  <div className="mt-2 flex flex-col gap-3">
                     <a
                       href="tel:+18005551234"
                       className="group inline-flex items-center justify-between w-full rounded-lg bg-gradient-to-r from-teal-400 to-cyan-300 text-black font-semibold px-4 py-3 shadow-lg hover:from-teal-300 hover:to-cyan-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-300/40 transition"
@@ -117,6 +126,15 @@ const Index = () => {
                       </div>
                       <span className="text-sm font-mono">+1 (800) 555-1234</span>
                     </a>
+
+                    {/* Submit another action (resets form state and clears inputs) */}
+                    <button
+                      type="button"
+                      onClick={handleReset}
+                      className="text-sm text-muted-foreground/80 hover:text-teal-300 transition"
+                    >
+                      Submit another lead
+                    </button>
                   </div>
                 </div>
               </div>
