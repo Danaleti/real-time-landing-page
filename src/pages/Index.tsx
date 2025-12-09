@@ -14,6 +14,9 @@ import {
  * - submitted state controls success card visibility
  * - resetKey increments to trigger form reset (passed to LeadCaptureForm)
  * - subtle animations on form de-emphasis & success card
+ *
+ * Focus-return behaviour is implemented inside LeadCaptureForm: when resetKey changes,
+ * the form clears fields and the first input receives focus (if autoFocusOnReset is true).
  */
 
 const FeatureItem: React.FC<{
@@ -38,7 +41,7 @@ const Index = () => {
   const [resetKey, setResetKey] = useState(0);
 
   const handleReset = () => {
-    // Hide success card and increment resetKey to clear the form
+    // Hide success card and increment resetKey to clear the form and trigger focus
     setSubmitted(false);
     setResetKey((k) => k + 1);
   };
@@ -88,14 +91,18 @@ const Index = () => {
                     : "opacity-100 scale-100"
                 }`}
               >
-                <LeadCaptureForm onSuccess={() => setSubmitted(true)} resetKey={resetKey} />
+                <LeadCaptureForm
+                  onSuccess={() => setSubmitted(true)}
+                  resetKey={resetKey}
+                  autoFocusOnReset={true}
+                />
               </div>
             </div>
           </section>
 
           {/* Success Card (hidden until submit) */}
           {submitted && (
-            <section className="mx-auto max-w-lg mt-12">
+            <section className="mx-auto max-w-lg mt-12" aria-live="polite">
               <div className="relative">
                 <div className="absolute -inset-8 blur-2xl rounded-2xl teal-radial/40 pointer-events-none" />
                 <div className="relative bg-[#111217] border border-white/6 rounded-2xl shadow-xl p-6 md:p-8 flex flex-col items-stretch gap-4 slide-fade-in">
@@ -127,7 +134,7 @@ const Index = () => {
                       <span className="text-sm font-mono">+1 (800) 555-1234</span>
                     </a>
 
-                    {/* Submit another action (resets form state and clears inputs) */}
+                    {/* Submit another action */}
                     <button
                       type="button"
                       onClick={handleReset}
