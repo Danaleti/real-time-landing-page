@@ -1,61 +1,146 @@
 import React from "react";
-// Import the new Header component
-import Header from "@/components/Header"; 
-// Using Lucide icons for the trust badges
-import { ShieldCheck, CheckCircle2, Phone } from "lucide-react";
-// Import the LeadCaptureForm component
+import Header from "@/components/Header";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
+import {
+  ShieldCheck,
+  CheckCircle2,
+  Phone,
+  Check,
+  PhoneCall,
+} from "lucide-react";
+
+/**
+ * Landing page layout:
+ * - Transparent header (kept from existing Header component)
+ * - Centered hero (headline + subheadline)
+ * - Lead capture form (existing LeadCaptureForm component)
+ * - Demo Success Card (matches screenshot)
+ * - Feature icons row
+ * - Minimal footer
+ */
+
+const FeatureItem: React.FC<{
+  Icon: React.ComponentType<any>;
+  label: string;
+}> = ({ Icon, label }) => {
+  return (
+    <div className="flex flex-col items-center gap-2 group">
+      <div
+        className="p-3 rounded-full bg-white/5 text-white/80 group-hover:text-teal-300 transition-colors"
+        aria-hidden
+      >
+        <Icon className="w-5 h-5" />
+      </div>
+      <div className="text-sm text-muted-foreground/80">{label}</div>
+    </div>
+  );
+};
 
 const Index = () => {
-
   return (
-    // Applied bg-hero-gradient for background ambiance
-    <div className="min-h-screen w-full bg-background flex flex-col relative overflow-hidden">
-      {/* Background Ambience - subtle glow effect */}
-      <div className="absolute inset-0 bg-hero-gradient pointer-events-none z-0" />
+    <div className="min-h-screen w-full bg-background text-foreground relative overflow-hidden">
+      {/* Teal radial glow behind center */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 flex items-start justify-center"
+        aria-hidden
+      >
+        <div className="mt-24 w-[1200px] max-w-full teal-radial opacity-80" />
+      </div>
 
-      {/* Header */}
-      <Header />
+      {/* Header (transparent) */}
+      <header className="relative z-20">
+        <div className="max-w-6xl mx-auto px-6">
+          <Header />
+        </div>
+      </header>
 
-      {/* Main Content - Centered Hero Section */}
-      <main className="flex-grow w-full max-w-4xl mx-auto px-4 pt-10 pb-20 flex flex-col items-center relative z-10 text-center">
-        
-        {/* Headline Section - Font sizing, weight, and tracking match the visual target */}
-        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight text-white mb-6">
-          Instant, Real-Time Call <br className="hidden md:block" />
-          Routing for <span className="text-primary text-glow">High-Intent Leads</span>
-        </h1>
-        
-        {/* Subtext - Subtle muted color, correct margin spacing */}
-        <p className="text-lg text-muted-foreground/80 leading-relaxed max-w-2xl mb-16 md:mb-20">
-          This page demonstrates Retreaver's powerful real-time lead capture and 
-          call routing technology. Submit your information to experience seamless, 
-          instant connection with our team.
-        </p>
+      {/* Main */}
+      <main className="relative z-10 flex-1 flex flex-col items-center">
+        <div className="w-full max-w-6xl px-6 py-16">
+          {/* Hero */}
+          <section className="mx-auto max-w-4xl text-center pt-6 pb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight tracking-tight text-white mb-4">
+              Instant, Real-Time Call
+              <br className="hidden md:inline" /> Routing for{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-cyan-200 text-glow">
+                High-Intent Leads
+              </span>
+            </h1>
 
-        {/* Form Component (The Card) */}
-        <LeadCaptureForm />
+            <p className="mt-4 text-lg text-muted-foreground/80 leading-relaxed max-w-2xl mx-auto">
+              Retreaver connects high-intent callers instantly with the right
+              specialist — real-time routing that reduces friction and improves
+              conversion. Submit your info to experience immediate connection.
+            </p>
+          </section>
 
-        {/* Footer Badges - Matched visual spacing, subtle color, and uppercase text */}
-        <div className="mt-16 flex flex-wrap justify-center gap-x-8 gap-y-4 text-xs font-medium text-muted-foreground/70 uppercase tracking-wider">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-primary/70" />
-            Secure & Encrypted
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-primary/70" />
-            Real-Time Routing
-          </div>
-          <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-primary/70" /> 
-            Instant Connection
-          </div>
+          {/* Centered form card area */}
+          <section className="mx-auto max-w-3xl">
+            {/* Card wrapper with subtle teal glow */}
+            <div className="relative">
+              <div className="absolute -inset-6 blur-3xl rounded-xl teal-radial/30 pointer-events-none" />
+              <div className="relative bg-card/95 border border-white/6 rounded-xl shadow-2xl p-6 md:p-8">
+                {/* Keep existing form component (retains fields and logic) */}
+                <LeadCaptureForm />
+              </div>
+            </div>
+          </section>
+
+          {/* Success Card (demo/presentational) */}
+          <section className="mx-auto max-w-lg mt-12">
+            <div className="relative">
+              <div className="absolute -inset-8 blur-2xl rounded-2xl teal-radial/40 pointer-events-none" />
+              <div className="relative bg-[#111217] border border-white/6 rounded-2xl shadow-xl p-6 md:p-8 flex flex-col items-stretch gap-4">
+                <div className="flex items-center justify-center">
+                  <div className="p-3 rounded-full bg-gradient-to-br from-teal-400/10 to-cyan-400/10 text-teal-300">
+                    <Check className="w-6 h-6" />
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <h3 className="text-white text-lg font-semibold">
+                    Thanks! You're ready to connect with our team.
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground/80">
+                    Click below to speak with a Retreaver specialist now.
+                  </p>
+                </div>
+
+                <div className="mt-2">
+                  <a
+                    href="tel:+18005551234"
+                    className="group inline-flex items-center justify-between w-full rounded-lg bg-gradient-to-r from-teal-400 to-cyan-300 text-black font-semibold px-4 py-3 shadow-lg hover:from-teal-300 hover:to-cyan-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-300/40 transition"
+                    aria-label="Call Retreaver Now"
+                  >
+                    <div className="flex items-center gap-3">
+                      <PhoneCall className="w-5 h-5 text-black/70" />
+                      <span>Call Retreaver Now</span>
+                    </div>
+                    <span className="text-sm font-mono">+1 (800) 555-1234</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Feature Icons Row */}
+          <section className="mx-auto max-w-2xl mt-12">
+            <div className="flex justify-center gap-12">
+              <FeatureItem Icon={ShieldCheck} label="Secure & Encrypted" />
+              <FeatureItem Icon={CheckCircle2} label="Real-Time Routing" />
+              <FeatureItem Icon={Phone} label="Instant Connection" />
+            </div>
+          </section>
         </div>
       </main>
-      
-      {/* Footer Copyright - Border is set by base class, text is muted/subtle */}
-      <footer className="w-full py-6 text-center text-xs text-muted-foreground/50 relative z-10 border-t border-white/5">
-        &copy; Retreaver. For demonstration and testing purposes only.
+
+      {/* Footer */}
+      <footer className="w-full py-6 relative z-10">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <p className="text-xs text-muted-foreground/20 hover:text-muted-foreground/80 transition-opacity opacity-0 hover:opacity-100">
+            © Retreaver. For demonstration and testing purposes only.
+          </p>
+        </div>
       </footer>
     </div>
   );
